@@ -8,9 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 
 import java.io.IOException;
 
+import javafx.stage.StageStyle;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -21,16 +23,51 @@ public class App extends Application {
 
     private static Scene scene;
     private SimpleClient client;
+    private Stage primaryStage;
 
     @Override
     public void start(Stage stage) throws IOException {
-    	EventBus.getDefault().register(this);
-    	client = SimpleClient.getClient();
-    	client.openConnection();
-        scene = new Scene(loadFXML("primary"), 640, 480);
-        stage.setScene(scene);
-        stage.show();
+        this.primaryStage = stage;
+        EventBus.getDefault().register(this);
+        // Set window icon
+        stage.getIcons().add(new Image(
+                getClass().getResourceAsStream("/il/cshaifasweng/OCSFMediatorExample/client/Tic-tac-toe-logo.png")
+        ));
+        stage.setTitle("Tic Tac Toe");
+        primaryStage.setResizable(false);
+        scene = new Scene(loadFXML("secondary"));
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
+
+    private void showConnectionError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Connection Error");
+        alert.setHeaderText("Could not connect to the server");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @org.greenrobot.eventbus.Subscribe
+    public void onTurnUpdate(ConnectToServerEvent event) {
+        Platform.runLater(() -> {
+            try {
+                client = event.getClientId();
+                client.openConnection();
+
+                scene = new Scene(loadFXML("primary"));
+                primaryStage.setScene(scene);
+                primaryStage.show();
+
+            } catch (IOException e) {
+                client = null;
+                e.printStackTrace();
+                showConnectionError("Failed to connect to the server:\n" + e.getMessage());
+            }
+        });
+    }
+
+
 
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
@@ -40,8 +77,6 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
-    
-    
 
     @Override
 	public void stop() throws Exception {

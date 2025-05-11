@@ -1,0 +1,43 @@
+.button {
+    -fx-font-size: 30px;
+    -fx-pref-width: 100px;
+    -fx-pref-height: 100px;
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-text-fill: black;
+    -fx-background-color: #717171;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
+
+.button:pressed {
+    -fx-background-color: #2a2a2a;
+    -fx-translate-y: 2;
+}
+
+.button {
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-size: 30px;
+}
+
+/* Style the VBox itself if needed */
+.vbox {
+    -fx-background-color: #a9a9a9; /* optional: gray background for entire VBox */
+}
+
+/* Style Label inside VBox */
+.label {
+    -fx-background-color: #717171; /* light gray */
+    -fx-text-fill: black;
+    -fx-alignment: center;
+    -fx-padding: 5;
+}
+
+/* Style GridPane inside VBox */
+GridPane {
+    -fx-background-color: #000000;
+    -fx-padding: 10;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+}

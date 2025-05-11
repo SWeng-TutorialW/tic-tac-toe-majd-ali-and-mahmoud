@@ -182,7 +182,6 @@ public abstract class AbstractClient implements Runnable
    */
   final public void closeConnection() throws IOException
   {
-
       readyToStop= true; 
       closeAll();
   }
